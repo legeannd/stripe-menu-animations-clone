@@ -7,6 +7,6 @@ interface DropdownProps {
 
 export function DropdownOption({ name, content: Content }: DropdownProps) {
   return (
-    <button>{name}</button>
+    <button className="dropdown-option">{name}</button>
   )
 }
