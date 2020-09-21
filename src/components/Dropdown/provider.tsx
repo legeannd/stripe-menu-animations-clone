@@ -58,7 +58,7 @@ export const DropdownProvider: React.FC = ({ children }) => {
   }, [setOptions]);
 
   useEffect(() => {
-    if (targetId !== null) setCachedId(targetId);
+    if (targetId) setCachedId(targetId);
   }, [targetId]);
 
   return (
