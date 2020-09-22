@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 
 import { Context } from './provider';
@@ -13,7 +13,7 @@ interface ArrowProps {
 const DropdownArrow:React.FC<ArrowProps> = ({ isFirstInteraction }) => {
   const { cachedId, getOptionById } = useContext(Context);
 
-  const cachedOption = useMemo(() => cachedId ? getOptionById(cachedId) : 0, [
+  const cachedOption = useMemo(() => cachedId ? getOptionById(cachedId) : undefined, [
     cachedId, 
     getOptionById
   ]);
@@ -39,12 +39,36 @@ const DropdownArrow:React.FC<ArrowProps> = ({ isFirstInteraction }) => {
   )
 };
 
+const DropdownBackground: React.FC = () => {
+  const { cachedId, getOptionById } = useContext(Context);
+
+  const cachedOption = useMemo(() => cachedId ? getOptionById(cachedId) : undefined, [
+    cachedId, 
+    getOptionById
+  ]);
+
+  const backgroundHeight = cachedOption && (cachedOption.backgroundHeight || 0)
+
+  return (
+    <motion.div 
+      className="dropdown-background"
+      animate={{
+        height: backgroundHeight,
+      }}
+      transition={{
+        ease: 'easeOut',
+        duration: refDuration,
+      }}
+    />
+  )
+}
+
 export function DropdownRoot() {
   const { options, cachedId, getOptionById, targetId } = useContext(Context);
   const [hovering, setHovering] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false)
 
-  const cachedOption = useMemo(() => cachedId ? getOptionById(cachedId) : 0, [
+  const cachedOption = useMemo(() => cachedId ? getOptionById(cachedId) : undefined , [
     cachedId, 
     getOptionById
   ]);
@@ -70,6 +94,17 @@ export function DropdownRoot() {
       if (!hasInteracted) setHasInteracted(true);
     }, 15);
   }
+
+  useEffect(() => {
+    if (isActive) return;
+
+    let timeout = setTimeout(
+      () => setHasInteracted(false),
+      refDuration * 1000 * 0.9,
+    )
+
+    return () => clearTimeout(timeout);
+  }, [isActive]);
 
   return (
     <div style={{ perspective: 2000 }}>
@@ -102,6 +137,8 @@ export function DropdownRoot() {
           onHoverStart={() => setHovering(true)}
           onHoverEnd={() => setHovering(false)}
         >
+          <DropdownBackground />
+
           <motion.div
             animate={{
               x: -x,

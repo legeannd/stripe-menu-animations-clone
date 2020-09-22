@@ -18,11 +18,11 @@ export function DropdownOption({ name, content: Content, backgroundHeight }: Dro
 
   const {hook, dimensions} = useDimensions();
   const [registered, setRegistered] = useState(false);
-  /* const [actualDimensions, setActualDimensions] = useState<DOMRect>();  */
 
   const {
     registerOption,
     updateOptionProps,
+    deleteOptionsById,
     setTargetId,
     targetId,
   } = useContext(Context);
@@ -69,6 +69,7 @@ export function DropdownOption({ name, content: Content, backgroundHeight }: Dro
     }
   }, [actualDimensions, backgroundHeight, id, dimensions, registerOption, registered, updateOptionProps]);
 
+  useEffect(() => deleteOptionsById(id), [deleteOptionsById, id]);
 
   let isMobile = false;
 
