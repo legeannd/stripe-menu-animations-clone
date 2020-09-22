@@ -1,19 +1,32 @@
-import React, { createContext, useCallback, useEffect, useState } from 'react';
+import React, { createContext, Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 
-const Context = createContext({});
-
-interface OptionsProps {
-  id: number;
-  optionsDimensions: number;
-  optionCenterX: number;
-  wrappedContent: JSX.Element;
-  backgroundHeight: number;
+interface OptionsContextData {
+  registerOption({ id, optionsDimensions, optionCenterX, wrappedContent, backgroundHeight }: OptionsProps): void,
+  updateOptionProps(id: number, props: OptionsProps): void,
+  getOptionById(id: number): OptionsProps | undefined,
+  deleteOptionsById(id: number): void,
+  options: Array<OptionsProps>,
+  targetId: number | null,
+  setTargetId: Dispatch<SetStateAction<number | null>>,
+  cachedId: number | null,
+  setCachedId: Dispatch<SetStateAction<number | null>>,
 }
+
+export interface OptionsProps {
+  id?: number;
+  optionsDimensions?: DOMRect | undefined;
+  optionCenterX?: number;
+  wrappedContent?: React.FC<{}>;
+  backgroundHeight?: number;
+}
+
+export const Context = createContext<OptionsContextData>({} as OptionsContextData);
+
 
 export const DropdownProvider: React.FC = ({ children }) => {
   const [options, setOptions] = useState<OptionsProps[]>([]);
-  const [targetId, setTargetId] = useState(null);
-  const [cachedId, setCachedId] = useState(null);
+  const [targetId, setTargetId] = useState<number | null>(null);
+  const [cachedId, setCachedId] = useState<number | null>(null);
 
   const registerOption = useCallback(({
     id, 
@@ -36,7 +49,7 @@ export const DropdownProvider: React.FC = ({ children }) => {
     ])
   }, [setOptions]);
 
-  const updateOptionProps = useCallback((optionId, props) => {
+  const updateOptionProps = useCallback((optionId: number, props: OptionsProps) => {
     setOptions(items => 
       items.map(item => {
         if (item.id === optionId) {
@@ -51,9 +64,9 @@ export const DropdownProvider: React.FC = ({ children }) => {
     )
   }, [setOptions]);
 
-  const getOptionById = useCallback((id) => options.find(item => item.id === id), [options]);
+  const getOptionById = useCallback((id: number) => options.find(item => item.id === id), [options]);
 
-  const deleteOptionsById = useCallback((id) => {
+  const deleteOptionsById = useCallback((id: number) => {
     setOptions(items => items.filter(item => item.id !== id));
   }, [setOptions]);
 
