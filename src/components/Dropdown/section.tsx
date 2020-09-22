@@ -14,7 +14,7 @@ export const DropdownSection: React.FC<SectionProps> = ({ optionItem }) => {
   const { id, optionsDimensions, backgroundHeight, optionCenterX } = optionItem;
 
   const contentWidth = optionsDimensions?.width || 0;
-  const x = optionCenterX && optionCenterX - contentWidth;
+  const x = optionCenterX && optionCenterX - contentWidth / 2;
 
   const isActive = cachedId === id;
 
@@ -27,6 +27,11 @@ export const DropdownSection: React.FC<SectionProps> = ({ optionItem }) => {
       animate={{
         x,
         opacity: isActive ? 1 : 0,
+        pointerEvents: isActive ? 'unset' : 'none',
+      }}
+      transition={{
+        ease: 'easeOut',
+        opacity: { duration: 0.2 }
       }}
     >
       {optionItem.WrappedContent ? optionItem.WrappedContent() : ''}

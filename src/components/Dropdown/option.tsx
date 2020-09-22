@@ -18,7 +18,7 @@ export function DropdownOption({ name, content: Content, backgroundHeight }: Dro
 
   const {hook, dimensions} = useDimensions();
   const [registered, setRegistered] = useState(false);
-  const [actualDimensions, setActualDimensions] = useState<DOMRect>(); 
+  /* const [actualDimensions, setActualDimensions] = useState<DOMRect>();  */
 
   const {
     registerOption,
@@ -27,6 +27,8 @@ export function DropdownOption({ name, content: Content, backgroundHeight }: Dro
     targetId,
   } = useContext(Context);
 
+  let actualDimensions: DOMRect | undefined = undefined;
+
   useEffect(() => {
     if (!registered && dimensions) {
       const WrappedContent = () => {
@@ -34,14 +36,17 @@ export function DropdownOption({ name, content: Content, backgroundHeight }: Dro
 
         useEffect(() => {
           if (contentRef.current) {
-            setActualDimensions(contentRef.current.getBoundingClientRect())
+            /* setActualDimensions(contentRef.current.getBoundingClientRect()) */
+            actualDimensions = contentRef.current.getBoundingClientRect();
           };
           updateOptionProps(id, {optionsDimensions: actualDimensions});
         }, []);
 
-        return <div ref={contentRef}>
-          <Content />
-        </div>
+        return (
+          <div ref={contentRef}>
+            <Content />
+          </div>
+        );
       };
 
       registerOption({
