@@ -47,7 +47,7 @@ export function DropdownOption({ name, content: Content, backgroundHeight }: Dro
       registerOption({
         id,
         optionsDimensions: actualDimensions,
-        optionCenterX: actualDimensions ? actualDimensions.x + (actualDimensions.width /2) : undefined,
+        optionCenterX: actualDimensions && actualDimensions.x + actualDimensions.width / 2,
         WrappedContent,
         backgroundHeight,
       });
@@ -58,7 +58,7 @@ export function DropdownOption({ name, content: Content, backgroundHeight }: Dro
       updateOptionProps(
         id, {
           optionsDimensions: dimensions,
-          optionCenterX: dimensions ? dimensions.x + (dimensions.width /2) : undefined,
+          optionCenterX: dimensions && dimensions.x + dimensions.width / 2,
         }
       );
     }
