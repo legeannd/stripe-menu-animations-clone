@@ -27,9 +27,10 @@ export function DropdownOption({ name, content: Content, backgroundHeight }: Dro
     targetId,
   } = useContext(Context);
 
-  let actualDimensions: DOMRect | undefined = undefined;
-
+  
   useEffect(() => {
+    let actualDimensions: DOMRect | undefined;
+
     if (!registered && dimensions) {
       const WrappedContent = () => {
         const contentRef = useRef<HTMLDivElement>(null);
@@ -67,7 +68,7 @@ export function DropdownOption({ name, content: Content, backgroundHeight }: Dro
         }
       );
     }
-  }, [actualDimensions, backgroundHeight, id, dimensions, registerOption, registered, updateOptionProps]);
+  }, [backgroundHeight, id, dimensions, registerOption, registered, updateOptionProps]);
 
   useEffect(() => deleteOptionsById(id), [deleteOptionsById, id]);
 

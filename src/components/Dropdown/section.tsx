@@ -9,9 +9,9 @@ interface SectionProps {
 }
 
 export const DropdownSection: React.FC<SectionProps> = ({ optionItem }) => {
-  const { updateOptionProps, cachedId } = useContext(Context);
+  const { cachedId } = useContext(Context);
 
-  const { id, optionsDimensions, backgroundHeight, optionCenterX } = optionItem;
+  const { id, optionsDimensions, optionCenterX } = optionItem;
 
   const contentWidth = optionsDimensions?.width || 0;
   const x = optionCenterX && optionCenterX - contentWidth / 2;
