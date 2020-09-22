@@ -6,6 +6,39 @@ import { DropdownSection } from './section';
 
 const refDuration = .22;
 
+interface ArrowProps {
+  isFirstInteraction: boolean;
+}
+
+const DropdownArrow:React.FC<ArrowProps> = ({ isFirstInteraction }) => {
+  const { cachedId, getOptionById } = useContext(Context);
+
+  const cachedOption = useMemo(() => cachedId ? getOptionById(cachedId) : 0, [
+    cachedId, 
+    getOptionById
+  ]);
+
+  const x = cachedOption ? cachedOption.optionCenterX : 0;
+
+  return (
+    <motion.div 
+      className="dropdown-arrow"
+      initial={{
+        opacity: 0,
+      }}
+      animate={{
+        x,
+        pointerEvents: 'none',
+        opacity: x && (x > 0 ? 1 : 0),
+      }}
+      transition={{
+        ease: 'easeOut',
+        x: { duration: isFirstInteraction ? 0 : refDuration },
+      }}
+    />
+  )
+};
+
 export function DropdownRoot() {
   const { options, cachedId, getOptionById, targetId } = useContext(Context);
   const [hovering, setHovering] = useState(false);
@@ -69,8 +102,10 @@ export function DropdownRoot() {
           {options.map(item => (
             <DropdownSection key={item.id} optionItem={item} />
           ))}
-        </motion.div>
+        </motion.div>      
       </motion.div>
+      
+      <DropdownArrow  isFirstInteraction={isFirstInteraction} />
     </div>
   );
 };
