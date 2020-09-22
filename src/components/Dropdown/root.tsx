@@ -1,11 +1,15 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 
 import { Context } from './provider';
 import { DropdownSection } from './section';
 
+const refDuration = .22;
+
 export function DropdownRoot() {
-  const { options, cachedId, getOptionById } = useContext(Context);
+  const { options, cachedId, getOptionById, targetId } = useContext(Context);
+  const [hovering, setHovering] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false)
 
   const cachedOption = useMemo(() => cachedId ? getOptionById(cachedId) : 0, [
     cachedId, 
@@ -24,6 +28,16 @@ export function DropdownRoot() {
     }
   }
 
+  const isActive = targetId !== null || hovering;
+
+  const isFirstInteraction = isActive && !hasInteracted;
+
+  if(isFirstInteraction) {
+    setTimeout(() => {
+      if (!hasInteracted) setHasInteracted(true);
+    }, 15);
+  }
+
   return (
     <div className="dropdown-root">
       <motion.div 
@@ -32,11 +46,24 @@ export function DropdownRoot() {
           x,
           width,
           height,
+          pointerEvents: isActive ? 'unset' : 'none',
         }}
+        transition={{
+          ease: 'easeOut',
+          x: isFirstInteraction ? { duration: 0 } : refDuration,
+          width: { duration: isFirstInteraction ? 0 : refDuration * 0.93},
+          height: { duration: isFirstInteraction ? 0 : refDuration * 0.93},
+          pointerEvents: { delay: 0.05},
+        }}
+        onHoverStart={() => setHovering(true)}
+        onHoverEnd={() => setHovering(false)}
       >
         <motion.div
           animate={{
             x: -x,
+          }}
+          transition={{
+            x: isFirstInteraction ? { duration: 0 } : undefined,
           }}
         >
           {options.map(item => (
