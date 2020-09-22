@@ -1,7 +1,7 @@
 import React, { createContext, Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 
 interface OptionsContextData {
-  registerOption({ id, optionsDimensions, optionCenterX, wrappedContent, backgroundHeight }: OptionsProps): void,
+  registerOption({ id, optionsDimensions, optionCenterX, WrappedContent, backgroundHeight }: OptionsProps): void,
   updateOptionProps(id: number, props: OptionsProps): void,
   getOptionById(id: number): OptionsProps | undefined,
   deleteOptionsById(id: number): void,
@@ -16,7 +16,7 @@ export interface OptionsProps {
   id?: number;
   optionsDimensions?: DOMRect | undefined;
   optionCenterX?: number;
-  wrappedContent?: React.FC<{}>;
+  WrappedContent?: () => JSX.Element;
   backgroundHeight?: number;
 }
 
@@ -32,14 +32,14 @@ export const DropdownProvider: React.FC = ({ children }) => {
     id, 
     optionsDimensions,
     optionCenterX,
-    wrappedContent,
+    WrappedContent,
     backgroundHeight,
   }) => {
     const optionsReceived: OptionsProps = {
       id,
       optionsDimensions,
       optionCenterX,
-      wrappedContent,
+      WrappedContent,
       backgroundHeight
     }
 

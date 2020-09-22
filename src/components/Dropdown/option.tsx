@@ -1,8 +1,8 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
 import { useDimensions } from './dimensions';
-import { Context, OptionsProps } from './provider';
+import { Context } from './provider';
 
 interface DropdownProps {
   name: string;
@@ -23,14 +23,13 @@ export function DropdownOption({ name, content: Content, backgroundHeight }: Dro
   const {
     registerOption,
     updateOptionProps,
-    deleteOptionsById,
     setTargetId,
     targetId,
   } = useContext(Context);
 
   useEffect(() => {
     if (!registered && dimensions) {
-      const WrappedContent: React.FC = () => {
+      const WrappedContent = () => {
         const contentRef = useRef<HTMLDivElement>(null);
 
         useEffect(() => {
@@ -49,7 +48,7 @@ export function DropdownOption({ name, content: Content, backgroundHeight }: Dro
         id,
         optionsDimensions: actualDimensions,
         optionCenterX: actualDimensions ? actualDimensions.x + (actualDimensions.width /2) : undefined,
-        wrappedContent: WrappedContent,
+        WrappedContent,
         backgroundHeight,
       });
 
