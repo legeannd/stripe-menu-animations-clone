@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
 import { useDimensions } from './dimensions';
@@ -64,11 +64,30 @@ export function DropdownOption({ name, content: Content, backgroundHeight }: Dro
       );
     }
   }, [actualDimensions, backgroundHeight, id, dimensions, registerOption, registered, updateOptionProps]);
-  
+
+
+  let isMobile = false;
+
+  const handleOpen = () => setTargetId(id);
+  const handleClose = () => setTargetId(null);
+  const handleTouch = () => (isMobile = true);
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    return targetId === id ? handleClose() : handleOpen();
+  }
+
   return (
     <motion.button 
       className="dropdown-option"
       ref={hook}
+      onMouseDown={(e) => handleClick(e)}
+      onHoverStart={() => !isMobile && handleOpen()}
+      onHoverEnd={() => !isMobile && handleClose()}
+      onTouchStart={handleTouch}
+      onFocus={handleOpen}
+      onBlur={handleClose}
     >
       {name}
     </motion.button>
